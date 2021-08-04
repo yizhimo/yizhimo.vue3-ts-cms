@@ -7,6 +7,7 @@ import App from './App.vue'
 
 import router from './router'
 import store from './store'
+import { setupStore } from './store'
 
 // element-plus 全局注册
 // import ElementPlus from 'element-plus'
@@ -17,5 +18,7 @@ const app = createApp(App)
 app.use(globalRegister)
 app.use(router)
 app.use(store)
+
+setupStore()
 
 app.mount('#app')
