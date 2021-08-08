@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
+import localCache from '@/utils/cache'
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -19,6 +21,16 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   routes,
   history: createWebHashHistory()
+})
+
+// 判断登录是否过期
+router.beforeEach((to) => {
+  if (to.path !== '/login') {
+    const token = localCache.getCache('token')
+    if (!token) {
+      return '/login'
+    }
+  }
 })
 
 export default router
