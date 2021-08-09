@@ -22,8 +22,8 @@ export default defineComponent({
     const store = useStore()
 
     const account = reactive({
-      name: '',
-      password: ''
+      name: localCache.getCache('name') || '',
+      password: localCache.getCache('password') || ''
     })
 
     // 表单验证规则
