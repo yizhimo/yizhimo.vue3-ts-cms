@@ -3,6 +3,7 @@ import { IBreadcrumb } from '@/base-ui/breadcrumb'
 
 // const firstMenu: any = null
 
+// 获取需要动态加载的路由表
 export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
 
