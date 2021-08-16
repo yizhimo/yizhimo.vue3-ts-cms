@@ -4,6 +4,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 import localCache from '@/utils/cache'
 // import { mapMenusToRoutes } from '@/utils/map-menus'
+import { firstMenu } from '@/utils/map-menus'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -52,6 +53,10 @@ router.beforeEach((to) => {
     // routes.forEach((route) => {
     //   router.addRoute('main', route)
     // })
+
+    if (to.path === '/main') {
+      return firstMenu.url
+    }
   }
 })
 

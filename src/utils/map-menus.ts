@@ -1,7 +1,7 @@
 import { RouteRecordRaw } from 'vue-router'
 import { IBreadcrumb } from '@/base-ui/breadcrumb'
 
-// const firstMenu: any = null
+let firstMenu: any = null
 
 // 获取需要动态加载的路由表
 export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
@@ -27,6 +27,10 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
       if (menu.type === 2) {
         const route = allRoutes.find((route) => route.path === menu.url)
         if (route) routes.push(route)
+
+        if (!firstMenu) {
+          firstMenu = menu
+        }
       } else {
         _recurseGetRoute(menu.children)
       }
@@ -64,3 +68,5 @@ export function pathMapBreadcrumbs(userMenus: any[], currentPath: string) {
   pathMapToMenu(userMenus, currentPath, breadcrumbs)
   return breadcrumbs
 }
+
+export { firstMenu }
