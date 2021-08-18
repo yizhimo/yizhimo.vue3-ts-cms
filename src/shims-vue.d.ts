@@ -6,3 +6,8 @@ declare module '*.vue' {
 }
 
 declare let $store: any
+
+declare module '*.jpg' {
+  const src: string
+  export default src
+}

@@ -82,6 +82,7 @@ export default defineComponent({
     }
     getPageData()
 
+    // 获取数据
     const dataList = computed(() =>
       store.getters[`system/pageListData`](props.pageName)
     )
