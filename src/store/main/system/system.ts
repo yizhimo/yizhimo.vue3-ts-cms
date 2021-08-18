@@ -14,7 +14,15 @@ const systemModule: Module<ISystemState, IRootState> = {
 
       // 角色管理
       roleList: [],
-      roleCount: 0
+      roleCount: 0,
+
+      // 商品列表
+      goodsList: [],
+      goodsCount: 0,
+
+      // 权限列表
+      menuList: [],
+      menuCount: 0
     }
   },
   mutations: {
@@ -30,6 +38,20 @@ const systemModule: Module<ISystemState, IRootState> = {
     },
     changeRoleCount(state, count: number) {
       state.roleCount = count
+    },
+
+    changeGoodsList(state, list: any[]) {
+      state.goodsList = list
+    },
+    changeGoodsCount(state, count: number) {
+      state.goodsCount = count
+    },
+
+    changeMenuList(state, list: any[]) {
+      state.menuList = list
+    },
+    changeMenuCount(state, count: number) {
+      state.menuCount = count
     }
   },
   getters: {

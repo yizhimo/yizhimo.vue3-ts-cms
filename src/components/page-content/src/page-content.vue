@@ -8,10 +8,10 @@
     >
       <!-- 1.header中的插槽 -->
       <template #headerHandler>
-        <el-button type="primary" size="medium">新建用户</el-button>
+        <el-button v-if="isCreate" type="primary" size="medium">新建</el-button>
       </template>
 
-      <!-- 2.列中的插槽 -->
+      <!-- 2.列中 固定 的插槽 -->
       <template #status="scope">
         <el-button
           plain
@@ -29,13 +29,37 @@
       </template>
       <template #handler>
         <div class="handle-btns">
-          <el-button icon="el-icon-edit" size="mini" type="text"
-            >编辑</el-button
+          <el-button
+            v-if="isUpdate"
+            icon="el-icon-edit"
+            size="mini"
+            type="text"
           >
-          <el-button icon="el-icon-delete" size="mini" type="text"
-            >删除</el-button
+            编辑
+          </el-button>
+
+          <el-button
+            v-if="isDelete"
+            icon="el-icon-delete"
+            size="mini"
+            type="text"
           >
+            删除
+          </el-button>
         </div>
+      </template>
+
+      <!-- 3.列中 动态/个性化 插槽 -->
+      <!-- 隔代 动态插槽 -->
+      <!-- goods -> content -> table -->
+      <template
+        v-for="item in otherPropSlots"
+        :key="item.prop"
+        #[item.slotName]="scope"
+      >
+        <template v-if="item.slotName">
+          <slot :name="item.slotName" :row="scope.row"></slot>
+        </template>
       </template>
     </hy-table>
   </div>
@@ -44,6 +68,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from 'vue'
 import { useStore } from '@/store'
+import { usePermission } from '@/hooks/use-permission'
 
 import HyTable from '@/base-ui/table'
 
@@ -64,6 +89,13 @@ export default defineComponent({
   setup(props) {
     const store = useStore()
 
+    // 获取当前页面 用户所能够操作的 按钮权限
+    const isCreate = usePermission(props.pageName, 'create')
+    const isUpdate = usePermission(props.pageName, 'update')
+    const isDelete = usePermission(props.pageName, 'delete')
+    const isQuery = usePermission(props.pageName, 'query')
+    // console.log('----', isCreate, isUpdate, isDelete, isQuery)
+
     // 双向绑定pageInfo
     const pageInfo = ref({ currentPage: 0, pageSize: 10 })
     // setup只会执行一次 pageInfo变化时 要手动调用请求数据
@@ -71,6 +103,9 @@ export default defineComponent({
 
     // 请求数据
     const getPageData = (queryInfo: any = {}) => {
+      // 权限判断
+      if (!isQuery) return
+
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName,
         queryInfo: {
@@ -90,11 +125,28 @@ export default defineComponent({
       store.getters[`system/pageListCount`](props.pageName)
     )
 
+    // 获取动态插槽的名称
+    const otherPropSlots = props.contentTableConfig?.propList.filter(
+      (item: any) => {
+        if (item.slotName === 'status') return false
+        if (item.slotName === 'createAt') return false
+        if (item.slotName === 'updateAt') return false
+        if (item.slotName === 'handler') return false
+        return true
+      }
+    )
+
     return {
       dataList,
       dataCount,
       pageInfo,
-      getPageData
+      getPageData,
+
+      otherPropSlots,
+
+      isCreate,
+      isUpdate,
+      isDelete
     }
   }
 })
