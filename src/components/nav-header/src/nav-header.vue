@@ -7,7 +7,6 @@
     ></i>
     <div class="content">
       <hy-breadcrumb :breadcrumbs="breadcrumbs" />
-      <div>面包屑</div>
       <user-info />
     </div>
   </div>
