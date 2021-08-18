@@ -6,8 +6,16 @@
       </template>
       <template #footer>
         <div class="handle-btns">
-          <el-button icon="el-icon-refresh">重置</el-button>
-          <el-button type="primary" icon="el-icon-search">搜索</el-button>
+          <el-button icon="el-icon-refresh" @click="handleResetClick">
+            重置
+          </el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            @click="handleQueryClick"
+          >
+            搜索
+          </el-button>
         </div>
       </template>
     </hy-form>
@@ -28,18 +36,40 @@ export default defineComponent({
   components: {
     HyForm
   },
-  setup() {
-    // 这里用ref好点
-    const formData = ref({
-      id: '',
-      name: '',
-      password: '',
-      sport: '',
-      createTime: ''
-    })
+  emits: ['resetBtnClick', 'queryBtnClick'],
+  setup(props, { emit }) {
+    // 双向绑定的属性应该是由配置文件的field来决定
+    const formItems = props.searchFormConfig?.formItems ?? []
+
+    // formData中的属性应该动态决定
+    // const formData = ref({
+    //   id: '',
+    //   name: '',
+    //   password: '',
+    //   sport: '',
+    //   createTime: ''
+    // })
+    const formOriginData: any = {}
+    for (const item of formItems) {
+      formOriginData[item.field] = ''
+    }
+    const formData = ref(formOriginData)
+
+    // 重置
+    const handleResetClick = () => {
+      formData.value = formOriginData
+      emit('resetBtnClick')
+    }
+
+    // 搜索
+    const handleQueryClick = () => {
+      emit('queryBtnClick', formData.value)
+    }
 
     return {
-      formData
+      formData,
+      handleResetClick,
+      handleQueryClick
     }
   }
 })

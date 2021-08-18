@@ -12,8 +12,8 @@
           <div class="page-info">
             <router-view></router-view>
           </div>
+          <div class="footer">特别感谢: coderWhy老师提供的接口</div>
         </el-main>
-        <el-footer>特别感谢: coderWhy老师</el-footer>
       </el-container>
     </el-container>
   </div>
@@ -59,9 +59,21 @@ export default defineComponent({
 
 .page-content {
   height: calc(100% - 48px);
+  padding-bottom: 0;
   .page-info {
     background-color: #fff;
     border-radius: 5px;
+  }
+
+  .footer {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    color: rgb(182, 182, 182);
+    text-align: center;
+    align-items: center;
   }
 }
 

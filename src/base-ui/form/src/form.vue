@@ -20,6 +20,8 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 />
               </template>
               <!-- 下拉选择框 -->
@@ -28,6 +30,8 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   style="width: 100%"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -42,6 +46,8 @@
                 <el-date-picker
                   style="width: 100%"
                   v-bind="item.otherOptions"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -56,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { IFormItem } from '../types'
 
 export default defineComponent({
@@ -92,21 +98,12 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    // 拷贝一份改变 监听变化传给父组件
-    const formData = ref({ ...props.modelValue })
-    watch(
-      formData,
-      (newValue) => {
-        // console.log(newValue)
-        emit('update:modelValue', newValue)
-      },
-      {
-        deep: true
-      }
-    )
+    const handleValueChange = (value: any, field: string) => {
+      emit('update:modelValue', { ...props.modelValue, [field]: value })
+    }
 
     return {
-      formData
+      handleValueChange
     }
   }
 })
