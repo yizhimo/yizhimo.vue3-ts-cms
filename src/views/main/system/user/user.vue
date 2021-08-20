@@ -9,6 +9,8 @@
       ref="pageContentRef"
       :contentTableConfig="contentTableConfig"
       pageName="users"
+      @newBtnClick="handleNewData"
+      @editBtnClick="handleEditData"
     ></page-content>
   </div>
 </template>
@@ -32,6 +34,8 @@ export default defineComponent({
   },
   setup() {
     const [pageContentRef, handleResetClick, handleQueryClick] = usePageSearch()
+
+    // pageModal相关的hook逻辑
 
     return {
       searchFormConfig,

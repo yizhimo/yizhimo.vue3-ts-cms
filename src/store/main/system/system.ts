@@ -1,8 +1,14 @@
 import { Module } from 'vuex'
 import { IRootState } from '@/store/types'
 import { ISystemState } from './types'
+import { ElMessage } from 'element-plus'
 
-import { getPageListData } from '@/service/main/system/system'
+import {
+  getPageListData,
+  deletePageData,
+  createPageData,
+  editPageData
+} from '@/service/main/system/system'
 
 const systemModule: Module<ISystemState, IRootState> = {
   namespaced: true,
@@ -73,6 +79,7 @@ const systemModule: Module<ISystemState, IRootState> = {
     }
   },
   actions: {
+    // 获取列表信息
     async getPageListAction({ commit }, payload: any) {
       // 获取对应接口
       const pageName = payload.pageName
@@ -98,6 +105,68 @@ const systemModule: Module<ISystemState, IRootState> = {
 
       //   commit('changeUserList', list)
       //   commit('changeUserCount', totalCount)
+    },
+
+    // 删除
+    async deletePageDataAction({ dispatch }, payload: any) {
+      // 接口规则 pageName -> /users  id -> /users/id
+      const { pageName, id } = payload
+      const pageUrl = `/${pageName}/${id}`
+
+      // 调用删除接口
+      const deleteData = await deletePageData(pageUrl)
+      console.log(deleteData)
+      switch (deleteData.code) {
+        case -1002:
+          ElMessage.error(deleteData.data)
+          break
+        default:
+          break
+      }
+
+      // 刷新-重新请求
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    },
+
+    // 新建
+    async createPageDataAction({ dispatch }, payload: any) {
+      // 1.创建数据的请求
+      const { pageName, newData } = payload
+      const pageUrl = `/${pageName}`
+      await createPageData(pageUrl, newData)
+
+      // 2.请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    },
+
+    // 编辑
+    async editPageDataAction({ dispatch }, payload: any) {
+      // 1.编辑数据的请求
+      const { pageName, editData, id } = payload
+      console.log(editData)
+      const pageUrl = `/${pageName}/${id}`
+      await editPageData(pageUrl, editData)
+
+      // 2.请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
     }
   }
 }

@@ -8,7 +8,13 @@
     >
       <!-- 1.header中的插槽 -->
       <template #headerHandler>
-        <el-button v-if="isCreate" type="primary" size="medium">新建</el-button>
+        <el-button
+          v-if="isCreate"
+          type="primary"
+          size="medium"
+          @click="handleNewClick"
+          >新建</el-button
+        >
       </template>
 
       <!-- 2.列中 固定 的插槽 -->
@@ -27,13 +33,14 @@
       <template #updateAt="scope">
         <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
       </template>
-      <template #handler>
+      <template #handler="scope">
         <div class="handle-btns">
           <el-button
             v-if="isUpdate"
             icon="el-icon-edit"
             size="mini"
             type="text"
+            @click="handleEditClick(scope.row)"
           >
             编辑
           </el-button>
@@ -43,6 +50,7 @@
             icon="el-icon-delete"
             size="mini"
             type="text"
+            @click="handleDeleteClick(scope.row)"
           >
             删除
           </el-button>
@@ -86,7 +94,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['newBtnClick', 'editBtnClick'],
+  setup(props, { emit }) {
     const store = useStore()
 
     // 获取当前页面 用户所能够操作的 按钮权限
@@ -136,6 +145,21 @@ export default defineComponent({
       }
     )
 
+    // 新建，编辑，删除
+    const handleNewClick = () => {
+      emit('newBtnClick')
+    }
+    const handleEditClick = (item: any) => {
+      emit('editBtnClick', item)
+    }
+    const handleDeleteClick = (item: any) => {
+      // console.log(item)
+      store.dispatch('system/deletePageDataAction', {
+        pageName: props.pageName,
+        id: item.id
+      })
+    }
+
     return {
       dataList,
       dataCount,
@@ -146,7 +170,11 @@ export default defineComponent({
 
       isCreate,
       isUpdate,
-      isDelete
+      isDelete,
+
+      handleDeleteClick,
+      handleNewClick,
+      handleEditClick
     }
   }
 })
