@@ -10,6 +10,7 @@ export interface IFormItem {
   options?: any[]
   // 针对特殊的属性
   otherOptions?: any
+  isHidden?: boolean
 }
 
 export interface IForm {
@@ -17,4 +18,5 @@ export interface IForm {
   labelWidth?: string
   colLayout?: any
   itemLayout?: any
+  itemStyle?: any
 }

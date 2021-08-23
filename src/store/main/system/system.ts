@@ -115,7 +115,6 @@ const systemModule: Module<ISystemState, IRootState> = {
 
       // 调用删除接口
       const deleteData = await deletePageData(pageUrl)
-      console.log(deleteData)
       switch (deleteData.code) {
         case -1002:
           ElMessage.error(deleteData.data)
@@ -139,7 +138,19 @@ const systemModule: Module<ISystemState, IRootState> = {
       // 1.创建数据的请求
       const { pageName, newData } = payload
       const pageUrl = `/${pageName}`
-      await createPageData(pageUrl, newData)
+
+      // 调用新建接口
+      const createData = await createPageData(pageUrl, newData)
+      switch (createData.code) {
+        case 400:
+          ElMessage.error(createData.data)
+          break
+        case 0:
+          ElMessage.success(createData.data)
+          break
+        default:
+          break
+      }
 
       // 2.请求最新的数据
       dispatch('getPageListAction', {
@@ -156,8 +167,20 @@ const systemModule: Module<ISystemState, IRootState> = {
       // 1.编辑数据的请求
       const { pageName, editData, id } = payload
       console.log(editData)
+
       const pageUrl = `/${pageName}/${id}`
-      await editPageData(pageUrl, editData)
+
+      const modifyData = await editPageData(pageUrl, editData)
+      switch (modifyData.code) {
+        case 400:
+          ElMessage.error(modifyData.data)
+          break
+        case 0:
+          ElMessage.success(modifyData.data)
+          break
+        default:
+          break
+      }
 
       // 2.请求最新的数据
       dispatch('getPageListAction', {
