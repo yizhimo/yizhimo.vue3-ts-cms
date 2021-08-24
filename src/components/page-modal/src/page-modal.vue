@@ -8,6 +8,7 @@
       destroy-on-close
     >
       <hy-form v-bind="modalConfig" v-model="formData"></hy-form>
+      <slot></slot>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>

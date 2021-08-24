@@ -126,6 +126,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .header {
+  margin-bottom: 10px;
   display: flex;
   height: 45px;
   padding: 0 5px;

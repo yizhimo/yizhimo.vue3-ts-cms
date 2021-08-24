@@ -15,9 +15,11 @@ import { setupStore } from './store'
 // app.use(ElementPlus)
 
 const app = createApp(App)
-app.use(store)
+
 // 本质上会执行 globalRegister函数
 app.use(globalRegister)
+
+app.use(store)
 
 // 这里要先存路由 再使用
 setupStore()

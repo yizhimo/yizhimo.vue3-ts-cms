@@ -15,7 +15,9 @@ const store = createStore<IRootState>({
       // 部门
       entireDepartment: [],
       // 角色
-      entireRole: []
+      entireRole: [],
+      // 权限菜单
+      entireMenu: []
     }
   },
   mutations: {
@@ -24,6 +26,9 @@ const store = createStore<IRootState>({
     },
     changeEntireRole(state, list) {
       state.entireRole = list
+    },
+    changeEntireMenu(state, list) {
+      state.entireMenu = list
     }
   },
   getters: {},
@@ -42,9 +47,13 @@ const store = createStore<IRootState>({
       })
       const { list: roleList } = roleResult.data
 
+      const menuResult = await getPageListData('/menu/list', {})
+      const { list: menuList } = menuResult.data
+
       // 保存数据
       commit('changeEntireDepartment', departmentList)
       commit('changeEntireRole', roleList)
+      commit('changeEntireMenu', menuList)
     }
   },
   modules: {
@@ -55,7 +64,9 @@ const store = createStore<IRootState>({
 
 export function setupStore() {
   store.dispatch('login/loadLocalLogin')
-  store.dispatch('getInitialDataAction')
+
+  // 这里是异步的 有可能点击了新建 还没获取到数据
+  // store.dispatch('getInitialDataAction')
 }
 
 // 导出vuex(带类型)
