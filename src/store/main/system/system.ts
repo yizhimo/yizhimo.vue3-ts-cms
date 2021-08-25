@@ -119,6 +119,9 @@ const systemModule: Module<ISystemState, IRootState> = {
         case -1002:
           ElMessage.error(deleteData.data)
           break
+        case 0:
+          ElMessage.success(deleteData.data)
+          break
         default:
           break
       }
